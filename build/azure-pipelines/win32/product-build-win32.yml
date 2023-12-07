@@ -172,6 +172,15 @@ steps:
         GITHUB_TOKEN: "$(github-distro-mixin-password)"
       displayName: Build client
 
+    - task: APIScan@2
+      displayName: APIScan client
+      inputs:
+        softwareFolder: '$(agent.builddirectory)/VSCode-win32-$(VSCODE_ARCH)'
+        softwareName: 'Visual Studio Code'
+        softwareVersionNum: ${{ parameters.VSCODE_QUALITY }}
+        softwareBuildNum: '$(Build.BuildId)'
+        symbolsFolder: 'SRV*http://symweb'
+
     - powershell: |
         . build/azure-pipelines/win32/exec.ps1
         $ErrorActionPreference = "Stop"
@@ -183,6 +192,15 @@ steps:
         GITHUB_TOKEN: "$(github-distro-mixin-password)"
       displayName: Build server
       condition: and(succeeded(), ne(variables['VSCODE_ARCH'], 'arm64'))
+
+    - task: APIScan@2
+      displayName: APIScan server
+      inputs:
+        softwareFolder: '$(agent.builddirectory)/vscode-server-win32-$(VSCODE_ARCH)'
+        softwareName: 'Visual Studio Code Server'
+        softwareVersionNum: ${{ parameters.VSCODE_QUALITY }}
+        softwareBuildNum: '$(Build.BuildId)'
+        symbolsFolder: 'SRV*http://symweb'
 
     - powershell: |
         . build/azure-pipelines/win32/exec.ps1

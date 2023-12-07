@@ -141,19 +141,6 @@ stages:
             displayName: CodeQL Finalize
             condition: eq(variables['Codeql.enabled'], 'True')
 
-          - powershell: yarn gulp "vscode-win32-$(VSCODE_ARCH)-min-ci"
-            env:
-              GITHUB_TOKEN: "$(github-distro-mixin-password)"
-            displayName: Build client
-
-          - task: APIScan@2
-            inputs:
-              softwareFolder: '$(agent.builddirectory)/VSCode-win32-$(VSCODE_ARCH)'
-              softwareName: 'Visual Studio Code'
-              softwareVersionNum: 'stable'
-              softwareBuildNum: '$(Build.BuildId)'
-              symbolsFolder: 'SRV*http://symweb'
-
           - powershell: yarn gulp "vscode-symbols-win32-$(VSCODE_ARCH)"
             env:
               GITHUB_TOKEN: "$(github-distro-mixin-password)"
